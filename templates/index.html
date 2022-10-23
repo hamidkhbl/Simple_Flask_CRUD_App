@@ -11,6 +11,24 @@
                 display: none;
                 color: red;
             }
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                width: 200px
+            }
+            li {
+                clear: both;
+            }
+            li button {
+                -webkit-appearance: none;
+                border: none;
+                outline: none;
+                color: red;
+                float: right;
+                cursor: pointer;
+                font-size:  20px;
+            }
             </style>
         
         <form id="form" action = "/todos/create" method="post">
@@ -22,10 +40,27 @@
 
         <ul id = "todos">
             {% for d in data %}
-            <li><input type="checkbox" class="check-completed" data-id="{{ d.id }}" {% if d.completed %} checked {%endif%}/>  {{d.desctiption}}</li>
+            <li>
+                <input type="checkbox" class="check-completed" data-id="{{ d.id }}" {% if d.completed %} checked {%endif%}/>
+                {{d.desctiption}}
+                <button class="delete" data-id="{{ d.id }}">&cross;</button>
+            </li>
             {% endfor %}
         </ul>
+        
         <script>
+            const deleteBtns = document.querySelectorAll('.delete');
+            for(let i=0; i< deleteBtns.length; i++){
+                const btn = deleteBtns[i]
+                btn.onclick = function(e){
+                    console.log('event', e)
+                    const todoId = e.target.dataset['id']
+                    fetch('/todos/' + todoId, {
+                        method: 'DELETE' 
+                    });
+                }
+            }
+
             const checkboxes = document.querySelectorAll('.check-completed');
             for(let i = 0; i < checkboxes.length; i++){
                 const checkbox = checkboxes[i];
